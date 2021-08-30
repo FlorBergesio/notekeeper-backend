@@ -1,14 +1,23 @@
 const Model = require('./model');
 
-const getList = async ( filterUser ) => {
-    let filter = {};
-    if ( filterUser !== null ) {
-        filter = {
-            user: filterUser,
+const getList = async ( filterNotebook ) => {
+    return new Promise((resolve, reject) => {
+        let filter = {};
+        if ( filterNotebook !== null ) {
+            filter = {
+                notebook: filterNotebook,
+            }
         }
-    }
-    const list = await Model.find( filter );
-    return list;
+        Model.find(filter)
+            .populate('notebook')
+            .exec((error, populated) => {
+                if (error) {
+                    reject(error);
+                    return false;
+                }
+                resolve(populated);
+            });
+    });
 };
 
 const add = note => {

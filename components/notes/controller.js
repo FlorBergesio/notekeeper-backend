@@ -6,13 +6,13 @@ const getList = ( filter ) => {
     });
 };
 
-const add = ( user, text ) => {
+const add = ( notebook, text ) => {
     return new Promise( ( resolve, reject ) => {
-        if ( !user || !text ) {
+        if ( !notebook || !text ) {
             return reject('Required data missing');
         }
         const note = {
-            user: user,
+            notebook: notebook,
             text: text,
             date: new Date(),
         };

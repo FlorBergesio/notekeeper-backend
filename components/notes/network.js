@@ -4,10 +4,10 @@ const controller = require('./controller');
 const router = express.Router();
 
 router.get('/', ( req, res ) => {
-    const filter = req.query.user || null;
+    const filter = req.query.notebook || null;
     controller.getList(filter)
         .then( list => {
-            response.success( req, res, list, 'Displaying list of notes' );
+            response.success( req, res, list, 'Displaying list of notes on notebook' );
         })
         .catch( e => {
             response.error( req, res, 'Could not get list of notes', e );
@@ -15,7 +15,7 @@ router.get('/', ( req, res ) => {
 });
 
 router.post('/', ( req, res ) => {
-    controller.add( req.body.user, req.body.text )
+    controller.add( req.body.notebook, req.body.text )
         .then( note => {
             response.success( req, res, note, `Note created succesfully: "${req.body.text}"`, 201 );
         })
