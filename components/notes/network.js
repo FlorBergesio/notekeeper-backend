@@ -1,13 +1,26 @@
 const express = require('express');
 const response = require('../../network/response');
+const controller = require('./controller');
 const router = express.Router();
 
 router.get('/', ( req, res ) => {
-    response.success( req, res, 'List of notes', 'Displaying list of notes' );
+    controller.getList()
+        .then( list => {
+            response.success( req, res, list, 'Displaying list of notes' );
+        })
+        .catch( e => {
+            response.error( req, res, 'Could not get list of notes', e );
+        });
 });
 
 router.post('/', ( req, res ) => {
-    response.success( req, res, 'Created successfully', `Note created succesfully with the text "${req.body.text}"`, 201 );
+    controller.add( req.body.user, req.body.text )
+        .then( note => {
+            response.success( req, res, note, `Note created succesfully: "${req.body.text}"`, 201 );
+        })
+        .catch( e => {
+            response.error( req, res, 'Could not be created', e, 400 );
+        });
 });
 
 router.delete('/', ( req, res ) => {
