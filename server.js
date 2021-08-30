@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const router = express.Router();
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(router);
 
 router.get('/', ( req, res ) => {
@@ -9,11 +11,13 @@ router.get('/', ( req, res ) => {
 });
 
 router.get('/notes', ( req, res ) => {
+    console.log(req.query);
     res.send('Notes list');
 });
 
 router.post('/notes', ( req, res ) => {
-    res.send('Note added');
+    console.log(req.body);
+    res.send(`Note added: "${req.body.text}"`);
 });
 
 router.delete('/notes', ( req, res ) => {
