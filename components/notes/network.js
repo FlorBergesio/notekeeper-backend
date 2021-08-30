@@ -4,7 +4,8 @@ const controller = require('./controller');
 const router = express.Router();
 
 router.get('/', ( req, res ) => {
-    controller.getList()
+    const filter = req.query.user || null;
+    controller.getList(filter)
         .then( list => {
             response.success( req, res, list, 'Displaying list of notes' );
         })
@@ -23,13 +24,24 @@ router.post('/', ( req, res ) => {
         });
 });
 
-router.delete('/', ( req, res ) => {
-    if(req.query.error == "ok") {
-        response.error( req, res, 'ERROR', 'Simulating error', 400 );
-    } else {
-        response.success( req, res, 'Note deleted', 'Note deleted successfully' );
+router.patch('/:id', ( req, res ) => {
+    controller.update( req.params.id, req.body.text )
+        .then( data => {
+            response.success( req, res, data, `Note updated succesfully: "${req.body.text}"` );
+        })
+        .catch( e => {
+            response.error( req, res, 'Could not be updated', e );
+        });
+});
 
-    }
+router.delete('/:id', ( req, res ) => {
+    controller.drop( req.params.id )
+        .then( data => {
+            response.success( req, res, data, `Note deleted succesfully: "${req.params.id}"` );
+        })
+        .catch( e => {
+            response.error( req, res, 'Could not be deleted', e );
+        });
 });
 
 module.exports = router;
