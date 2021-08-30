@@ -6,7 +6,7 @@ const statusMessages = {
 };
 
 exports.success = function (req, res, message, details, status) {
-    console.log('[response log]' + details);
+    console.log('[response log] ' + details);
     let statusCode = status;
     let statusMessage = message;
 
@@ -17,7 +17,6 @@ exports.success = function (req, res, message, details, status) {
     if(!message) {
         statusMessage = statusMessages[statusCode];
     }
-    console.log(status, statusCode);
 
     res.status(statusCode).send({
         error: '',
@@ -26,7 +25,7 @@ exports.success = function (req, res, message, details, status) {
 }
 
 exports.error = function (req, res, message, details, status) {
-    console.error('[response error]' + details);
+    console.error('[response error] ' + details);
     let statusCode = status;
     let statusMessage = message;
 
