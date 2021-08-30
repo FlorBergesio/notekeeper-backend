@@ -1,0 +1,30 @@
+{
+  "name": "notekeeper-b",
+  "version": "0.1.0",
+  "description": "Node backend for Notekeeper",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/FlorBergesio/notekeeper-backend.git"
+  },
+  "keywords": [
+    "node",
+    "api",
+    "note",
+    "notebook",
+    "notes",
+    "server"
+  ],
+  "author": "Maria Florencia Bergesio Moreno",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FlorBergesio/notekeeper-backend/issues"
+  },
+  "homepage": "https://github.com/FlorBergesio/notekeeper-backend#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
