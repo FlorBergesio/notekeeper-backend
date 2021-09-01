@@ -91,12 +91,12 @@ const login = ( username, password ) => {
             return reject('Required data missing');
         }
 
-        exists = await store.findUsername( username );
-        if ( exists ) {
-            const user = await store.findFullUser( exists._id );
-            const validated = validatePassword( password, user.password, user.salt );
+        user = await store.findUsername( username );
+        if ( user ) {
+            const fullUser = await store.findFullUser( user._id );
+            const validated = validatePassword( password, fullUser.password, fullUser.salt );
             if ( validated === true ) {
-                resolve('User logged in successfully');
+                resolve( user );
             } else {
                 reject('Wrong password');
             }
