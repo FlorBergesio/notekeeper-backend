@@ -14,12 +14,12 @@ router.get('/', ( req, res ) => {
 });
 
 router.post('/', ( req, res ) => {
-    controller.add( req.body.name )
+    controller.add( req.body.name, req.body.username, req.body.password )
         .then( user => {
-            response.success( req, res, user, `User created succesfully: "${req.body.name}"`, 201 );
+            response.success( req, res, user, `User created succesfully: "${req.body.name}" (${req.body.username})`, 201 );
         })
         .catch( e => {
-            response.error( req, res, 'Could not be created', e, 400 );
+            response.error( req, res, e, e, 400 );
         });
 });
 
@@ -40,6 +40,16 @@ router.delete('/:id', ( req, res ) => {
         })
         .catch( e => {
             response.error( req, res, 'Could not be deleted', e );
+        });
+});
+
+router.post('/login', ( req, res ) => {
+    controller.login( req.body.username, req.body.password )
+        .then( message => {
+            response.success( req, res, message, 'Log in successfull' );
+        })
+        .catch( e => {
+            response.error( req, res, 'Could not login. Check credentials and try again later', e );
         });
 });
 

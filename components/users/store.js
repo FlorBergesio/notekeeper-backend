@@ -32,10 +32,24 @@ const drop = ( id ) => {
     });
 };
 
+const findUsername = async ( username ) => {
+    const user = await Model.findOne( { username: username } );
+    return user;
+};
+
+const findFullUser = async ( id ) => {
+    const user = await Model.findOne({
+        _id: id
+    }).select("+password").select("+salt");
+    return user;
+};
+
 module.exports = {
     getList,
     add,
     update,
     find,
     drop,
+    findUsername,
+    findFullUser,
 };

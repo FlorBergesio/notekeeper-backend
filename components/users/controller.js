@@ -1,20 +1,57 @@
 const store = require('./store');
+const crypto = require('crypto');
+
+const encript = ( clean_password ) => {
+    // Salt
+    const length = 16;
+    const salt =  crypto.randomBytes( Math.ceil( length / 2 ) )
+                    .toString( 'hex' ) 
+                    .slice( 0, length ); 
+    // Hash
+    const hash = crypto.createHmac( 'sha512', salt );
+    hash.update ( clean_password );
+    
+    return {
+      salt: salt,
+      hash: hash.digest( 'hex' )
+    };
+};
+
+const validatePassword = ( password, hashed_password, salt ) => {
+    const hash = crypto.createHmac( 'sha512', salt );
+    hash.update( password );
+    userpass = hash.digest( 'hex' );
+    return userpass == hashed_password;
+};
 
 const getList = () => {
     return store.getList();
 };
 
-const add = ( name ) => {
-    return new Promise( ( resolve, reject ) => {
-        if ( !name ) {
+const add = ( name, username, password ) => {
+    return new Promise( async ( resolve, reject ) => {
+        if ( !name || !username || !password ) {
             return reject('Required data missing');
         }
-        const user = {
-            name: name,
-        };
 
-        store.add(user);
-        return resolve(user);
+        exists = await store.findUsername( username );
+        if ( !exists ) {
+            const hashed_password = encript( password );
+            const user = {
+                name: name,
+                username: username,
+                password: hashed_password.hash,
+                salt: hashed_password.salt
+            };
+            const clean_user = {
+                name: user.name,
+                username: user.username
+            };
+            store.add(user);
+            resolve( clean_user );
+        } else {
+            reject('Username already in use');
+        }
     });
 };
 
@@ -48,9 +85,31 @@ const drop = ( id ) => {
     });
 }
 
+const login = ( username, password ) => {
+    return new Promise( async ( resolve, reject ) => {
+        if ( !username || !password ) {
+            return reject('Required data missing');
+        }
+
+        exists = await store.findUsername( username );
+        if ( exists ) {
+            const user = await store.findFullUser( exists._id );
+            const validated = validatePassword( password, user.password, user.salt );
+            if ( validated === true ) {
+                resolve('User logged in successfully');
+            } else {
+                reject('Wrong password');
+            }
+        } else {
+            reject('User does not exist');
+        }
+    });
+};
+
 module.exports = {
     add,
     getList,
     update,
     drop,
+    login,
 };

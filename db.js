@@ -9,7 +9,8 @@ db.Promise = global.Promise;
 const connect = async () => {
     await db.connect(uri, {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        autoIndex: true,
     })
         .then( () => console.log('BD connected successfully'))
         .catch( e => console.error('BD', e));
