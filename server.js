@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const db = require('./db');
 const router = require('./network/routes');
+const dotenv = require('dotenv');
+dotenv.config();
 
 db.connect();
 
@@ -19,5 +21,7 @@ app.use((req, res, next) => {
 
 router(app);
 
-app.listen(3000);
-console.log('App is listening in http://localhost:3000');
+const port_number = ( process.env.PORT ? process.env.PORT : 3000)
+
+app.listen(port_number);
+console.log(`App is listening in http://localhost:${port_number}`);
