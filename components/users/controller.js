@@ -34,7 +34,7 @@ const add = ( name, username, password ) => {
             return reject('Required data missing');
         }
 
-        exists = await store.findUsername( username );
+        const exists = await store.findUsername( username );
         if ( !exists ) {
             const hashed_password = encript( password );
             const user = {
@@ -43,12 +43,19 @@ const add = ( name, username, password ) => {
                 password: hashed_password.hash,
                 salt: hashed_password.salt
             };
-            const clean_user = {
-                name: user.name,
-                username: user.username
-            };
-            store.add(user);
-            resolve( clean_user );
+            
+            await store.add(user)
+                .then( resp => {
+                    const clean_user = {
+                        _id: resp._id,
+                        name: user.name,
+                        username: user.username
+                    };
+                    resolve( clean_user );
+                })
+                .catch( e => {
+                    reject('User could not be created');
+                });
         } else {
             reject('Username already in use');
         }

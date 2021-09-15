@@ -6,8 +6,17 @@ const getList = async () => {
 };
 
 const add = user => {
-    const newUser = new Model(user);
-    newUser.save();
+    return new Promise( async ( resolve, reject ) => {
+        const newUser = new Model(user);
+        newUser.save(( err, user ) => {
+            if ( !!user ) {
+                resolve( user );
+            }
+            if ( !!err ) {
+                reject( err );
+            }
+         });
+    });
 };
 
 const update = async ( id, name ) => {
